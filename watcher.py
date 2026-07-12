@@ -246,14 +246,30 @@ def entry_id(feed_name, entry):
     return hashlib.sha1(f"{feed_name}|{raw}".encode()).hexdigest()
 
 
-def fetch(url):
-    return feedparser.parse(url, request_headers={"User-Agent": USER_AGENT})
+def fetch(url, retries=1):
+    """Parse a feed, retrying once on transient network errors (e.g. a
+    server closing the connection mid-response) before giving up."""
+    last_err = None
+    for attempt in range(retries + 1):
+        try:
+            return feedparser.parse(url, request_headers={"User-Agent": USER_AGENT})
+        except Exception as e:
+            last_err = e
+            if attempt < retries:
+                time.sleep(1.5)
+    raise last_err
 
 
 def validate(feeds):
     ok = bad = 0
     for name, url, _ in feeds:
-        d = fetch(url)
+        try:
+            d = fetch(url)
+        except Exception as e:
+            print(f"✗ {name:<28} EXCEPTION: {e}\n    {url}")
+            bad += 1
+            time.sleep(0.5)
+            continue
         alive = not d.bozo and len(d.entries) > 0
         # some valid feeds set bozo for minor issues; entries are the real test
         alive = alive or len(d.entries) > 0
@@ -268,7 +284,11 @@ def validate(feeds):
 def collect_new(feeds, seen):
     new_items = []
     for name, url, keywords in feeds:
-        d = fetch(url)
+        try:
+            d = fetch(url)
+        except Exception as e:
+            print(f"feed fetch failed: {name}: {e}")
+            continue
         for e in d.entries[:15]:
             eid = entry_id(name, e)
             if eid in seen:
