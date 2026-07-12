@@ -35,9 +35,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          gh label create pr-watch --force --color 1d76db 2>/dev/null || true
+          # For guaranteed notification regardless of watch settings, set
+          # your username here (assignment always triggers a notification):
+          ASSIGNEE=""   # e.g. ASSIGNEE="--assignee your-username"
           gh issue create \
             --title "PR watch: new items $(date -u +'%Y-%m-%d %H:%M UTC')" \
-            --body-file digest.md
+            --body-file digest.md \
+            --label pr-watch $ASSIGNEE
           rm digest.md
       - name: Commit state
         run: |
