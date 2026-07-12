@@ -37,6 +37,9 @@ import yaml
 import urllib.request
 import xml.etree.ElementTree as ET
 
+import socket
+socket.setdefaulttimeout(20)
+
 SM_NS = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
 
 
