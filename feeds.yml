@@ -295,9 +295,14 @@ gnews_queries:
   # --- executive tracking (uncomment to enable; news coverage of a CEO's
   # X posts/statements acts as a significance filter — trivial posts don't
   # get written up, consequential ones do within the hour) ---
-  # - '"Sam Altman"'
-  # - '"Dario Amodei"'
-  # - '"Jensen Huang"'
-  # - '"Demis Hassabis"'
-  # - '"Lisa Su" AMD'
-  # - '"Musk" AND ("Grok" OR "SpaceXAI")'
+  - '"Sam Altman"'
+  - '"Dario Amodei"'
+  - '"Jensen Huang"'
+  - '"Demis Hassabis"'
+  - '"Lisa Su" AMD'
+  - '"Musk" AND ("Grok" OR "SpaceXAI")'
+  - query: '"Polymarket" OR "Kalshi" OR "prediction market"'
+    exclude:
+      - "promo code"
+      - "invite code"
+      - "\\$\\d+ (off|bonus)"
