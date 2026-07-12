@@ -1,0 +1,303 @@
+# Press release watcher config
+#
+# status values:
+#   verified   - I checked this URL resolves to a real feed (as of 2026-07-12)
+#   candidate  - plausible/commonly-cited URL, NOT verified. Run:
+#                  python watcher.py --validate
+#                to test every feed and see which are live.
+#
+# EDGAR 8-K feeds are generated automatically from `edgar_tickers` below —
+# pattern: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={ticker}&type=8-K&output=atom
+# Google News feeds are generated from `gnews_queries`.
+
+feeds:
+  # ---- verified newsroom feeds ----
+  - name: Apple Newsroom
+    url: https://www.apple.com/newsroom/rss-feed.rss
+    status: verified
+  - name: NVIDIA Newsroom
+    url: https://nvidianews.nvidia.com/rss.xml
+    status: verified
+
+  # ---- candidates: validate before trusting ----
+  - name: Microsoft News
+    url: https://news.microsoft.com/feed/
+    status: candidate
+  - name: Official Microsoft Blog
+    url: https://blogs.microsoft.com/feed/
+    status: candidate
+  - name: Microsoft Security Blog
+    url: https://www.microsoft.com/en-us/security/blog/feed/
+    status: candidate
+    keywords: [ransomware, breach, nation-state, zero-day, AI, Copilot,
+               threat, attack, vulnerability]
+  - name: Microsoft MSRC Blog   # security response center — incident disclosures
+    url: https://msrc.microsoft.com/blog/rss
+    status: candidate
+  - name: Azure Status
+    url: https://azure.status.microsoft/en-us/status/feed/
+    status: candidate
+  - name: Google (The Keyword)
+    url: https://blog.google/rss/
+    status: candidate
+  - name: Meta Newsroom
+    url: https://about.fb.com/feed/
+    status: candidate
+  - name: AI at Meta Blog
+    # no feed advertised on ai.meta.com/blog (checked 2026-07-12);
+    # this URL follows the old ai.facebook.com pattern — if it fails
+    # validation, the page-diff entry below covers it
+    url: https://ai.meta.com/blog/rss/
+    status: candidate
+  - name: Amazon News
+    url: https://www.aboutamazon.com/news/rss
+    status: candidate
+  - name: OpenAI News
+    url: https://openai.com/news/rss.xml
+    status: candidate  # externally re-verified May 2026; still confirm with --validate
+  - name: xAI / SpaceXAI News (scraped, unofficial)
+    # x.ai/news has no official RSS; this feed is generated hourly by
+    # github.com/Olshansk/rss-feeds via GitHub Actions
+    url: https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_xainews.xml
+    status: candidate
+  - name: AMD Press Releases
+    url: https://www.amd.com/en/newsroom.rss
+    status: candidate
+  - name: AMD Investor Relations press releases
+    # ir.amd.com is Q4-hosted like NVIDIA's; grab the exact press-release
+    # RSS URL from the IR site's RSS page if this guess fails validation
+    url: https://ir.amd.com/rss/press-releases.xml
+    status: candidate
+  - name: AMD ROCm Blog   # AI/GPU software side — MI-series, PyTorch, LLM posts
+    url: https://rocm.blogs.amd.com/atom.xml
+    status: candidate
+  - name: Intel Newsroom
+    url: https://newsroom.intel.com/feed/
+    status: candidate
+  - name: IBM Newsroom
+    url: https://newsroom.ibm.com/press-releases?pagetemplate=rss
+    status: candidate
+  - name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    status: candidate
+
+  # ---- Shopify ----
+  - name: Shopify Newsroom
+    url: https://www.shopify.com/news.rss
+    status: candidate
+  - name: Shopify Engineering Blog
+    url: https://shopify.engineering/blog.atom
+    status: candidate
+  - name: Shopify Changelog   # product/API changes, incl. AI features
+    url: https://changelog.shopify.com/rss
+    status: candidate
+
+  # ---- Cloudflare ----
+  - name: Cloudflare Blog
+    url: https://blog.cloudflare.com/rss/
+    status: candidate  # feed URL has moved before — validate!
+  - name: Cloudflare Status (incidents)
+    # status page confirms Atom/RSS feeds exist; /history.rss is the
+    # standard Statuspage pattern
+    url: https://www.cloudflarestatus.com/history.rss
+    status: candidate
+  # Cloudflare product changelog feeds (official, documented):
+  # https://developers.cloudflare.com/fundamentals/new-features/available-rss-feeds/
+  # — grab the "all products" feed URL from that page if you want it.
+
+  # ---- cybersecurity / ransomware (general-audience signal) ----
+  - name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    status: candidate
+  - name: The Record (Recorded Future News)
+    url: https://therecord.media/feed
+    status: candidate
+  - name: BleepingComputer
+    url: https://www.bleepingcomputer.com/feed/
+    status: candidate
+    # high volume — filtered to stories a general AI/tech audience cares about
+    keywords: [ransomware, breach, breached, hacked, zero-day, extortion,
+               leak, outage, Microsoft, Google, Apple, OpenAI, Anthropic,
+               Cloudflare, NVIDIA, AI]
+  - name: CISA Advisories
+    url: https://www.cisa.gov/cybersecurity-advisories/all.xml
+    status: candidate
+
+  # ---- crypto / bitcoin ----
+  - name: CoinDesk
+    url: https://www.coindesk.com/arc/outboundfeeds/rss/
+    status: candidate
+    keywords: [Bitcoin, SEC, CFTC, ETF, Coinbase, hack, stolen, Polymarket,
+               Kalshi, stablecoin, Treasury, regulation]
+  - name: The Block
+    url: https://www.theblock.co/rss.xml
+    status: candidate
+    keywords: [Bitcoin, SEC, CFTC, ETF, hack, Polymarket, Kalshi, regulation]
+
+# Single pages that get appended/edited in place (release notes, changelogs,
+# pricing pages). Content is fetched, text-extracted, stored in pages/, and
+# a unified diff is emailed on change. First run stores a baseline silently.
+# JSON endpoints behind pages — the most robust way to track sites without
+# feeds. Find them in browser DevTools -> Network -> XHR/Fetch.
+# Job boards are the marquee use: new postings leak strategy early.
+# Greenhouse pattern: https://boards-api.greenhouse.io/v1/boards/{slug}/jobs
+#   (find the slug in the careers page URL: boards.greenhouse.io/{slug})
+# Lever pattern:      https://api.lever.co/v0/postings/{slug}?mode=json
+json_endpoints:
+  # Slugs below are guesses from company names — confirm each from the
+  # careers page URL (boards.greenhouse.io/{slug} or jobs.lever.co/{slug});
+  # a wrong slug just logs "json fetch failed" and is skipped.
+  - name: Anthropic job postings
+    url: https://boards-api.greenhouse.io/v1/boards/anthropic/jobs
+    items_path: jobs
+    id_field: id
+    title_field: title
+    link_field: absolute_url
+  - name: Scale AI job postings
+    url: https://boards-api.greenhouse.io/v1/boards/scaleai/jobs
+    items_path: jobs
+    id_field: id
+    title_field: title
+    link_field: absolute_url
+  - name: Cerebras job postings
+    url: https://boards-api.greenhouse.io/v1/boards/cerebras/jobs
+    items_path: jobs
+    id_field: id
+    title_field: title
+    link_field: absolute_url
+  - name: Mistral job postings (Lever)
+    url: https://api.lever.co/v0/postings/mistral?mode=json
+    items_path: ""          # Lever returns a bare list
+    id_field: id
+    title_field: text
+    link_field: hostedUrl
+  # Other patterns:
+  #   Lever:  https://api.lever.co/v0/postings/{slug}?mode=json
+  #   Ashby:  https://api.ashbyhq.com/posting-api/job-board/{org}
+  #           (items_path: jobs, id_field: id, title_field: title,
+  #            link_field: jobUrl — OpenAI and several labs use Ashby)
+
+pages:
+  - name: AI at Meta blog listing
+    url: https://ai.meta.com/blog/
+    # fallback for the feed-less blog; diff fires on new post titles.
+    # If the candidate RSS feed above validates, remove this entry.
+  - name: TrueUp layoffs tracker
+    url: https://www.trueup.io/layoffs
+    # drop live counters so diffs fire only when the layoffs list changes
+    ignore:
+      - 'people impacted'
+      - 'people per day'
+      - 'open jobs'
+      - 'As of \w+ \d+'
+      - 'Loading latest'
+  - name: Claude release notes (support article)
+    url: https://support.claude.com/en/articles/12138966-release-notes
+  - name: ChatGPT release notes (help article)
+    # URL unverified — find the "ChatGPT — Release Notes" article on
+    # help.openai.com and paste its URL here
+    url: https://help.openai.com/en/articles/6825453-chatgpt-release-notes
+  # Tip: GitHub repos need no diffing — native atom feeds exist:
+  #   releases:  https://github.com/anthropics/claude-code/releases.atom
+  #   commits:   https://github.com/{owner}/{repo}/commits/{branch}.atom
+  # Add those to `feeds:` above instead.
+
+# Help centers and docs sites have no RSS, but new pages appear in their
+# sitemap.xml — and support articles often go live BEFORE announcements.
+# All URLs below except platform.claude.com are the standard Intercom /
+# common pattern and are unverified: test with a --dry-run.
+# `include` filters to a URL substring; `track_updates: true` also alerts
+# when an existing page's <lastmod> changes (quiet edits).
+sitemaps:
+  - name: Claude support articles
+    url: https://support.claude.com/sitemap.xml
+    include: /articles/
+    track_updates: true
+  - name: Claude platform docs   # verified to exist (Jan 2026, ~2,525 URLs)
+    url: https://platform.claude.com/sitemap.xml
+    include: /docs/
+  - name: OpenAI help articles
+    url: https://help.openai.com/sitemap.xml
+    include: /articles/
+    track_updates: true
+  - name: Gemini support (Google)
+    url: https://support.google.com/gemini/sitemap.xml
+    include: ""
+  - name: xAI docs
+    url: https://docs.x.ai/sitemap.xml
+    include: ""
+  - name: Mistral help
+    url: https://help.mistral.ai/sitemap.xml
+    include: /articles/
+
+# US-listed tickers -> EDGAR 8-K atom feeds (material events, incl. Ex-99.1
+# press releases). Reliable and near-real-time. Add/remove freely.
+edgar_tickers:
+  - AAPL   # Apple
+  - MSFT   # Microsoft
+  - GOOGL  # Alphabet
+  - AMZN   # Amazon
+  - META   # Meta
+  - NVDA   # NVIDIA
+  - TSLA   # Tesla
+  - AMD
+  - INTC   # Intel
+  - TSM    # TSMC (files 6-K not 8-K; handled below)
+  - AVGO   # Broadcom
+  - QCOM   # Qualcomm
+  - MU     # Micron
+  - ARM    # Arm Holdings
+  - ASML   # ASML (6-K)
+  - ORCL   # Oracle
+  - PLTR   # Palantir
+  - SMCI   # Supermicro
+  - CRWV   # CoreWeave
+  - NET    # Cloudflare
+  - CRWD   # CrowdStrike (cybersecurity bellwether)
+  - PANW   # Palo Alto Networks
+  - COIN   # Coinbase
+  - MSTR   # Strategy (largest corporate bitcoin holder)
+  - SHOP   # Shopify (Canadian but a US domestic filer since ~2021, so 8-K
+           # should be right — if the feed comes back empty, check EDGAR
+           # and move it to edgar_6k_tickers)
+  # - ????   # SpaceX (public since June 2026, now owns xAI/Grok as "SpaceXAI").
+  #          # Ticker not verified — look up via EDGAR company search for
+  #          # "Space Exploration Technologies"; the CIK works in the feed URL too.
+
+# Foreign private issuers file 6-K instead of 8-K
+edgar_6k_tickers:
+  - TSM
+  - ASML
+
+# Private / no-RSS companies -> Google News RSS query feeds.
+# Quoted phrases keep results tight; add "press release" or site: terms
+# if too noisy.
+gnews_queries:
+  - '"Anthropic"'
+  - '"OpenAI"'
+  - '"Mistral AI"'
+  - '"SpaceXAI" OR "xAI"'
+  - '"Grok" AI'
+  - '"Cerebras"'
+  - '"Groq"'
+  - '"Scale AI"'
+  - '"Databricks"'
+  - '"SambaNova"'
+  - '"Polymarket" OR "Kalshi" OR "prediction market"'
+  # --- hires / departures / layoffs (dict form = keyword-filtered:
+  # every result is fetched but only titles matching a keyword alert) ---
+  - query: 'OpenAI OR Anthropic OR "Google DeepMind" OR "SpaceXAI" OR "Meta AI"'
+    keywords: [hires, hired, joins, joining, departs, departing, leaves,
+               leaving, poach, resigns, steps down, layoffs, laid off,
+               cuts, exits, appointed, named]
+  - query: 'NVIDIA OR Microsoft OR AMD OR Intel OR TSMC layoffs'
+    keywords: [layoffs, laid off, cuts, restructuring, WARN]
+  # --- executive tracking (uncomment to enable; news coverage of a CEO's
+  # X posts/statements acts as a significance filter — trivial posts don't
+  # get written up, consequential ones do within the hour) ---
+  # - '"Sam Altman"'
+  # - '"Dario Amodei"'
+  # - '"Jensen Huang"'
+  # - '"Demis Hassabis"'
+  # - '"Lisa Su" AMD'
+  # - '"Musk" AND ("Grok" OR "SpaceXAI")'
