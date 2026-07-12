@@ -3,15 +3,12 @@ on:
   schedule:
     - cron: "*/15 * * * *"   # best-effort; expect 5-15 min jitter
   workflow_dispatch: {}       # manual trigger for testing
-
 permissions:
   contents: write             # commit seen.json / pages/
   issues: write               # issue-notification mode
-
 concurrency:
   group: pr-watch
   cancel-in-progress: false
-
 jobs:
   watch:
     runs-on: ubuntu-latest
@@ -25,8 +22,10 @@ jobs:
         env:
           # Set ONE of these secret groups, or neither for issue mode:
           # Resend:  RESEND_API_KEY + MAIL_TO (+ optional MAIL_FROM)
-          # SMTP:    SMTP_USER + SMTP_PASS + MAIL_TO
+          # SMTP:    SMTP_HOST + SMTP_PORT + SMTP_USER + SMTP_PASS + MAIL_TO
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
