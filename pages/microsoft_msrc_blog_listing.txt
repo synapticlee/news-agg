@@ -1,0 +1,121 @@
+Blog MSRC | Microsoft Security Response Center
+This is the Trace Id: 58a1253ad05c8bfd3b809293e722936d
+Skip to main content
+MSRC
+Report Security Vulnerability
+Report Abuse
+Report Infringement
+Submission FAQs
+Reporting Vulnerability
+Security Update Guide
+Exploitability index
+Developer API documentation
+Frequently Asked Questions
+Technical Security Notifications
+Glossary
+Microsoft Bug Bounty Programs
+Microsoft Active Protections Program
+BlueHat Security Conference
+Researcher Recognition Program
+Windows Security Servicing Criteria
+Researcher Resource Center
+Microsoft Security Response Center
+Security Research & Defense
+BlueHat Conference Blog
+Security Researcher Acknowledgments
+Online Services Researcher Acknowledgments
+AI Safety Acknowledgements
+Security Researcher Leaderboard
+Microsoft Security Response Center
+(MSRC) Blog
+Explore the latest from MSRC, including security program updates, policy changes, technical research, and perspectives from the people helping protect customers across Microsoft. The blog brings together timely announcements, deep technical analysis, strategic guidance, and community stories from researchers and security teams around the world.
+About MSRC >
+What's new
+Check out the latest blog from MSRC
+Latest Blog
+Congratulations to the MSRC 2026 Most Valuable Security Researchers
+Celebrating the top security researchers whose contributions helped protect Microsoft customers and strengthen the security community over the past year.
+Read more >
+Explore blogs
+Explore MSRC blog content by category, from strategic security perspectives to technical research and community highlights.
+MSRC Updates
+MSRC perspectives on security strategy and long-standing industry challenges
+Read leadership posts and MSRC team updates and insights on how defenders can prepare for what comes next.
+View blogs >
+Technical Research
+Deep technical write-ups, vulnerability research, and defense guidance
+Explore technical analysis from MSRC, including vulnerability research, exploitability, and mitigation guidance.
+View blogs >
+Community
+Researcher spotlights, leaderboard updates, and bounty community news
+Follow highlights from the global security research community and the people helping protect customers.
+View blogs >
+View all MSRC blogs
+Japan Security Team
+Check out the latest blog from the Japan Security Team.
+Japan Security Team
+Japan Security Team
+The latest threat research, guidance, and security updates from the Microsoft Japan Security Team, helping protect customers across the region and around the world.
+Explore Japan blogs
+Follow the Microsoft Security and Response Center (MSRC)
+Surface Pro
+Surface Laptop
+Surface Laptop Ultra
+Surface RTX Spark Dev Box
+Copilot for organizations
+Copilot for personal use
+Explore Microsoft products
+Windows 11 apps
+Account profile
+Download Center
+Microsoft Store support
+Returns
+Order tracking
+Certified Refurbished
+Microsoft Store Promise
+Flexible Payments
+Microsoft in education
+Devices for education
+Microsoft Teams for Education
+Microsoft 365 Education
+How to buy for your school
+Educator training and development
+Deals for students and parents
+AI for education
+Microsoft AI
+Microsoft Security
+Dynamics 365
+Microsoft 365
+Microsoft Power Platform
+Microsoft Teams
+Microsoft 365 Copilot
+Small Business
+Azure
+Microsoft Developer
+Microsoft Learn
+Support for AI marketplace apps
+Microsoft Tech Community
+Microsoft Marketplace
+Software companies
+Visual Studio
+Careers
+About Microsoft
+Company news
+Privacy at Microsoft
+Investors
+Diversity and inclusion
+Accessibility
+Sustainability
+English (United States)
+Your Privacy Choices Opt-Out Icon
+Your Privacy Choices
+Consumer Health Privacy
+Sitemap
+Contact Microsoft
+Privacy
+Manage cookies
+Terms of use
+Trademarks
+Safety & eco
+Recycling
+About our ads
