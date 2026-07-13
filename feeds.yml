@@ -134,6 +134,35 @@ feeds:
     status: candidate
     keywords: [Bitcoin, SEC, CFTC, ETF, hack, Polymarket, Kalshi, regulation]
 
+  # ---- X / Twitter accounts (unofficial RSS bridge — fragile) ----
+  # X has no free official RSS. These use xcancel.com, a Nitter-style
+  # front-end that mirrors X profiles as RSS (/{handle}/rss). Nitter-style
+  # instances get rate-limited or die without notice — if these start
+  # failing validation, find a live instance at
+  # https://github.com/zedeus/nitter/wiki/Instances (or search "nitter
+  # instance status") and swap the domain below.
+  # Note: xcancel.com's /rss currently returns only the single latest post
+  # per account (not a full recent timeline) — fine at a 5-min poll cadence,
+  # but a burst of several posts between polls will only surface the last one.
+  - name: "X: @sama"
+    url: https://xcancel.com/sama/rss
+    status: verified   # checked 2026-07-13
+  - name: "X: @DarioAmodei"
+    url: https://xcancel.com/DarioAmodei/rss
+    status: verified   # checked 2026-07-13
+  - name: "X: @elonmusk"
+    url: https://xcancel.com/elonmusk/rss
+    status: verified   # checked 2026-07-13
+  - name: "X: @OpenAI"
+    url: https://xcancel.com/OpenAI/rss
+    status: verified   # checked 2026-07-13
+  - name: "X: @AnthropicAI"
+    url: https://xcancel.com/AnthropicAI/rss
+    status: verified   # checked 2026-07-13
+  - name: "X: @xai"
+    url: https://xcancel.com/xai/rss
+    status: verified   # checked 2026-07-13
+
 # Single pages that get appended/edited in place (release notes, changelogs,
 # pricing pages). Content is fetched, text-extracted, stored in pages/, and
 # a unified diff is emailed on change. First run stores a baseline silently.

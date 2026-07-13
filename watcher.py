@@ -18,6 +18,7 @@ Email env vars (set as GitHub secrets):
 """
 
 import argparse
+import datetime
 import difflib
 import hashlib
 import html
@@ -281,6 +282,15 @@ def validate(feeds):
     print(f"\n{ok} live, {bad} dead — remove or fix dead ones in feeds.yml")
 
 
+def is_today(entry):
+    """True if the entry's published/updated date is today (UTC), or if
+    the feed gives no date at all (nothing to filter on, so don't drop it)."""
+    parsed = entry.get("published_parsed") or entry.get("updated_parsed")
+    if not parsed:
+        return True
+    return datetime.date(*parsed[:3]) == datetime.datetime.utcnow().date()
+
+
 def collect_new(feeds, seen):
     new_items = []
     for name, url, keywords in feeds:
@@ -294,6 +304,8 @@ def collect_new(feeds, seen):
             if eid in seen:
                 continue
             seen[eid] = int(time.time())
+            if not is_today(e):
+                continue  # marked seen, but not from today — not alerted on
             title = e.get("title", "(no title)")
             if keywords and not any(k in title.lower() for k in keywords):
                 continue  # marked seen, but filtered out of the alert

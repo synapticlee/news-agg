@@ -1,7 +1,9 @@
 # pr-watcher
 
-Polls ~40 feeds (company newsrooms, SEC EDGAR 8-K/6-K, Google News queries)
-every 20 minutes and emails a digest of anything new.
+Polls ~40 feeds (company newsrooms, SEC EDGAR 8-K/6-K, Google News queries,
+X/Twitter accounts) every 5 minutes and emails a digest of anything new.
+Items are only alerted on if published today (UTC) — older entries that
+resurface due to feed reordering are recorded as seen but not sent.
 
 ## Setup
 
@@ -30,12 +32,55 @@ every 20 minutes and emails a digest of anything new.
 
 ## Latency expectations
 
-GitHub Actions cron is best-effort: a `*/15` schedule typically fires
-5–15 minutes late and can occasionally skip. Real-world latency is
-~15–30 min, which is fine for press releases. If you ever need true
-near-instant (2–5 min), run this same script in a loop on a small VPS
-or Fly.io machine — no code changes needed:
+GitHub Actions cron is best-effort, and in practice it's worse than the
+docs imply: on a low-activity public repo, a `*/5` schedule has been
+observed firing only every 2-3 **hours** instead of every 5 minutes —
+GitHub silently deprioritizes frequent schedules on repos without much
+other Actions traffic. `git log` is the way to check this: look at the
+timestamps on `update seen state` commits.
+
+### Fixing it: trigger from outside GitHub's scheduler
+
+The workflow already accepts `workflow_dispatch` (manual/API trigger), so
+the fix is to have an external cron service call that endpoint instead of
+relying on GitHub's `schedule:` trigger:
+
+1. Create a GitHub **fine-grained personal access token**
+   (Settings → Developer settings → Fine-grained tokens) scoped to just
+   this repo, with **Actions: Read and write** permission.
+2. Sign up at a free external cron service, e.g. https://cron-job.org.
+3. Create a job that runs every 5 minutes and sends:
+   - **URL:** `https://api.github.com/repos/synapticlee/news-agg/actions/workflows/watch.yml/dispatches`
+   - **Method:** POST
+   - **Headers:** `Authorization: Bearer <YOUR_TOKEN>`,
+     `Accept: application/vnd.github+json`
+   - **Body:** `{"ref":"main"}`
+4. Leave the `schedule:` trigger in `watch.yml` as a backup — the
+   `concurrency` group (`cancel-in-progress: false`) already prevents
+   overlapping runs if both fire close together.
+
+You can test the request by hand first:
+```
+curl -X POST -H "Authorization: Bearer <YOUR_TOKEN>" \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/synapticlee/news-agg/actions/workflows/watch.yml/dispatches \
+  -d '{"ref":"main"}'
+```
+A 204 response means it queued a run — check the Actions tab.
+
+If you ever need true near-instant (2–5 min) and don't want to depend on
+GitHub Actions at all, run this same script in a loop on a small VPS or
+Fly.io machine — no code changes needed:
 `while true; do python watcher.py; sleep 180; done`
+
+## Future ideas (not yet implemented)
+
+- **Scrape newsletters in the inbox.** Would need read access to a mailbox
+  (Gmail API or IMAP) to pull in newsletter content that never appears on
+  the web (paid Substacks, member-only digests). Bigger lift than the RSS
+  sources here: needs auth/credentials as GitHub secrets, a parser per
+  newsletter format, and dedup logic separate from `seen.json`'s
+  entry-ID scheme.
 
 ## Notes / caveats
 
@@ -46,10 +91,10 @@ or Fly.io machine — no code changes needed:
 - **EDGAR only covers public companies.** Anthropic, xAI, Mistral, etc.
   are covered via Google News query feeds, which are noisier (media
   coverage, not press releases). Tighten queries with extra terms if needed.
-- **GitHub Actions cron is best-effort** — "*/20" can slip to 25–35 min
-  under load. If you need true instant, run the script on a small VPS or
-  fly.io machine on a 5-min loop instead. sec.gov rate limit: 10 req/s;
-  the script sleeps between fetches.
+- sec.gov rate limit: 10 req/s; the script sleeps between fetches.
+- **X/Twitter feeds are the most fragile source.** The `xcancel.com`
+  bridge can go down or start blocking without warning — check it first
+  if the digest goes quiet on those entries specifically.
 - **Newsroom RSS ≠ IR press releases** for some companies (e.g., NVIDIA's
   investor site has a separate Q4-hosted press-release feed). If earnings
   specifically matter, EDGAR catches them regardless.
