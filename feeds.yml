@@ -209,10 +209,6 @@ pages:
   - name: AI at Meta blog listing
     url: https://ai.meta.com/blog/
     # fallback for the feed-less blog; diff fires on new post titles.
-  - name: Microsoft MSRC blog listing
-    url: https://www.microsoft.com/en-us/msrc/blog
-    # fallback added 2026-07-13 after the MSRC blog's RSS feed went dead
-    # (moved off msrc.microsoft.com with no feed re-advertised)
   - name: TrueUp layoffs tracker
     url: https://www.trueup.io/layoffs
     # drop live counters so diffs fire only when the layoffs list changes
