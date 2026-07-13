@@ -162,6 +162,34 @@ feeds:
     url: https://xcancel.com/xai/rss
     status: verified   # checked 2026-07-13
 
+  # ---- Hacker News (community-curated "top news", filtered to our topics) ----
+  # hnrss.org is a long-running third-party bridge over HN's official Algolia
+  # search API — same "unofficial RSS bridge" pattern as xcancel.com above.
+  # `points=` is hnrss's own quality floor; `keywords` (our existing filter)
+  # then cuts the frontpage down to just AI/big-tech/security/crypto stories.
+  - name: Hacker News (front page, filtered)
+    url: https://hnrss.org/frontpage?points=100
+    status: verified   # checked 2026-07-13 (curl, HTTP 200)
+    keywords: [AI, Anthropic, Claude, OpenAI, ChatGPT, GPT, Grok, xAI, Gemini,
+               DeepMind, Mistral, LLM, agent, NVIDIA, Microsoft, Copilot,
+               Google, Meta, Apple, Amazon, AWS, Cloudflare, breach,
+               ransomware, hack, hacked, exploit, vulnerability, zero-day,
+               outage, layoffs, Bitcoin, crypto, SEC]
+
+  # ---- Reddit (top-of-day across relevant subreddits, filtered) ----
+  # www.reddit.com/*.rss 429s on direct fetches (confirmed 2026-07-13) even
+  # at a polite polling cadence — old.reddit.com does not. If old.reddit
+  # ever starts 429ing too, split this into one feed per subreddit (lower
+  # per-request volume) before assuming Reddit killed RSS entirely.
+  - name: Reddit (top of day, filtered)
+    url: https://old.reddit.com/r/technology+artificial+singularity+programming+hardware/top/.rss?t=day&limit=25
+    status: verified   # checked 2026-07-13 (curl, HTTP 200 on the single-sub form; multi-sub form untested live due to rate-limit hit while testing — same UA/cadence should be fine at 5-min polling)
+    keywords: [AI, Anthropic, Claude, OpenAI, ChatGPT, GPT, Grok, xAI, Gemini,
+               DeepMind, Mistral, LLM, agent, NVIDIA, Microsoft, Copilot,
+               Google, Meta, Apple, Amazon, AWS, Cloudflare, breach,
+               ransomware, hack, hacked, exploit, vulnerability, zero-day,
+               outage, layoffs, Bitcoin, crypto, SEC]
+
 # Single pages that get appended/edited in place (release notes, changelogs,
 # pricing pages). Content is fetched, text-extracted, stored in pages/, and
 # a unified diff is emailed on change. First run stores a baseline silently.
