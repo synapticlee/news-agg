@@ -223,22 +223,27 @@ GNEWS_FMT = "https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:en"
 
 
 def build_feed_list(cfg):
-    """Returns list of (name, url, keywords). keywords is a list of
-    lowercase strings; if non-empty, only entries whose title contains
-    at least one keyword are alerted on."""
-    feeds = [(f["name"], f["url"], [k.lower() for k in f.get("keywords", [])])
+    """Returns list of (name, url, keywords, exclude). Both are lists of
+    lowercase strings: if keywords is non-empty, only entries whose title
+    contains at least one keyword are alerted on; if exclude is non-empty,
+    entries whose title contains any excluded term are dropped regardless
+    of keywords."""
+    feeds = [(f["name"], f["url"], [k.lower() for k in f.get("keywords", [])],
+              [x.lower() for x in f.get("exclude", [])])
              for f in cfg.get("feeds", [])]
     sixk = set(cfg.get("edgar_6k_tickers", []))
     for t in cfg.get("edgar_tickers", []):
         form = "6-K" if t in sixk else "8-K"
         feeds.append((f"EDGAR {form}: {t}",
-                      EDGAR_FMT.format(ticker=t, form=form), []))
+                      EDGAR_FMT.format(ticker=t, form=form), [], []))
     for q in cfg.get("gnews_queries", []):
         if isinstance(q, dict):
-            query, kws = q["query"], [k.lower() for k in q.get("keywords", [])]
+            query = q["query"]
+            kws = [k.lower() for k in q.get("keywords", [])]
+            exc = [x.lower() for x in q.get("exclude", [])]
         else:
-            query, kws = q, []
-        feeds.append((f"GNews: {query}", GNEWS_FMT.format(q=quote(query)), kws))
+            query, kws, exc = q, [], []
+        feeds.append((f"GNews: {query}", GNEWS_FMT.format(q=quote(query)), kws, exc))
     return feeds
 
 
@@ -263,7 +268,7 @@ def fetch(url, retries=1):
 
 def validate(feeds):
     ok = bad = 0
-    for name, url, _ in feeds:
+    for name, url, _, _ in feeds:
         try:
             d = fetch(url)
         except Exception as e:
@@ -293,7 +298,7 @@ def is_today(entry):
 
 def collect_new(feeds, seen):
     new_items = []
-    for name, url, keywords in feeds:
+    for name, url, keywords, exclude in feeds:
         try:
             d = fetch(url)
         except Exception as e:
@@ -308,6 +313,8 @@ def collect_new(feeds, seen):
                 continue  # marked seen, but not from today — not alerted on
             title = e.get("title", "(no title)")
             if keywords and not any(k in title.lower() for k in keywords):
+                continue  # marked seen, but filtered out of the alert
+            if exclude and any(x in title.lower() for x in exclude):
                 continue  # marked seen, but filtered out of the alert
             new_items.append({
                 "feed": name,

@@ -345,7 +345,10 @@ gnews_queries:
   - '"Scale AI"'
   - '"Databricks"'
   - '"SambaNova"'
-  - '"Polymarket" OR "Kalshi" OR "prediction market"'
+  # Polymarket/Kalshi query lives below with an `exclude` filter for promo
+  # spam — don't duplicate it here unfiltered. A bare duplicate of the same
+  # query claims every entry as "seen" before the filtered copy runs (same
+  # feed name -> same dedup key), so the exclude never gets a chance to fire.
   # --- hires / departures / layoffs (dict form = keyword-filtered:
   # every result is fetched but only titles matching a keyword alert) ---
   - query: 'OpenAI OR Anthropic OR "Google DeepMind" OR "SpaceXAI" OR "Meta AI"'
