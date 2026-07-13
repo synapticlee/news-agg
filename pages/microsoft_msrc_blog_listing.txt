@@ -1,5 +1,5 @@
 Blog MSRC | Microsoft Security Response Center
-This is the Trace Id: fb6beee79bac85e176030d8963c42668
+This is the Trace Id: 70257a4efd2d53e004470e5f4b7159fc
 Skip to main content
 MSRC
 Report Security Vulnerability
