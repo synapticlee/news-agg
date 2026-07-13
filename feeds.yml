@@ -1,7 +1,7 @@
 # Press release watcher config
 #
 # status values:
-#   verified   - I checked this URL resolves to a real feed (as of 2026-07-12)
+#   verified   - I checked this URL resolves to a real feed (as of 2026-07-13)
 #   candidate  - plausible/commonly-cited URL, NOT verified. Run:
 #                  python watcher.py --validate
 #                to test every feed and see which are live.
@@ -9,6 +9,10 @@
 # EDGAR 8-K feeds are generated automatically from `edgar_tickers` below —
 # pattern: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK={ticker}&type=8-K&output=atom
 # Google News feeds are generated from `gnews_queries`.
+#
+# Full --validate pass done 2026-07-13: 12 of 40 feeds were dead. Fixed URLs
+# where a live replacement was found, removed entries with no replacement,
+# and marked everything else that resolved live as `verified`.
 
 feeds:
   # ---- verified newsroom feeds ----
@@ -22,85 +26,80 @@ feeds:
   # ---- candidates: validate before trusting ----
   - name: Microsoft News
     url: https://news.microsoft.com/feed/
-    status: candidate
+    status: verified
   - name: Official Microsoft Blog
     url: https://blogs.microsoft.com/feed/
-    status: candidate
+    status: verified
   - name: Microsoft Security Blog
     url: https://www.microsoft.com/en-us/security/blog/feed/
-    status: candidate
+    status: verified
     keywords: [ransomware, breach, nation-state, zero-day, AI, Copilot,
                threat, attack, vulnerability]
-  - name: Microsoft MSRC Blog   # security response center — incident disclosures
-    url: https://msrc.microsoft.com/blog/rss
-    status: candidate
+  # Microsoft MSRC Blog RSS is gone (blog moved to microsoft.com/en-us/msrc/blog
+  # in 2026 with no discoverable feed) — see the page-diff entry below instead.
   - name: Azure Status
+    # Often legitimately shows 0 entries when there's no active incident —
+    # --validate flags 0-entry feeds as "dead", but the URL/XML is fine.
     url: https://azure.status.microsoft/en-us/status/feed/
-    status: candidate
+    status: verified
   - name: Google (The Keyword)
     url: https://blog.google/rss/
-    status: candidate
+    status: verified
   - name: Meta Newsroom
     url: https://about.fb.com/feed/
-    status: candidate
-  - name: AI at Meta Blog
-    # no feed advertised on ai.meta.com/blog (checked 2026-07-12);
-    # this URL follows the old ai.facebook.com pattern — if it fails
-    # validation, the page-diff entry below covers it
-    url: https://ai.meta.com/blog/rss/
-    status: candidate
+    status: verified
+  # AI at Meta Blog RSS (ai.meta.com/blog/rss/) is dead (404) — the page-diff
+  # entry below ("AI at Meta blog listing") already covers this blog.
   - name: Amazon News
     url: https://www.aboutamazon.com/news/rss
-    status: candidate
+    status: verified
   - name: OpenAI News
     url: https://openai.com/news/rss.xml
-    status: candidate  # externally re-verified May 2026; still confirm with --validate
+    status: verified   # checked 2026-07-13 (1040 entries)
   - name: xAI / SpaceXAI News (scraped, unofficial)
     # x.ai/news has no official RSS; this feed is generated hourly by
     # github.com/Olshansk/rss-feeds via GitHub Actions
     url: https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_xainews.xml
-    status: candidate
-  - name: AMD Press Releases
-    url: https://www.amd.com/en/newsroom.rss
-    status: candidate
+    status: verified
+  # AMD Press Releases (www.amd.com/en/newsroom.rss) removed: the server
+  # actively resets the HTTP/2 connection for automated fetches (bot
+  # mitigation, not a moved URL) — no working alternative found. AMD IR
+  # press releases below + the EDGAR AMD 8-K feed cover the material news.
   - name: AMD Investor Relations press releases
-    # ir.amd.com is Q4-hosted like NVIDIA's; grab the exact press-release
-    # RSS URL from the IR site's RSS page if this guess fails validation
-    url: https://ir.amd.com/rss/press-releases.xml
-    status: candidate
-  - name: AMD ROCm Blog   # AI/GPU software side — MI-series, PyTorch, LLM posts
-    url: https://rocm.blogs.amd.com/atom.xml
-    status: candidate
+    # fixed 2026-07-13: old /rss/press-releases.xml guess 404'd; this is the
+    # real URL (ir.amd.com/rss/news-releases.xml 301-redirects to it too)
+    url: https://ir.amd.com/news-events/press-releases/rss
+    status: verified   # checked 2026-07-13 (10 entries)
+  # AMD ROCm Blog (rocm.blogs.amd.com/atom.xml) removed: 404, and no feed
+  # link discoverable on the blog itself as of 2026-07-13 — re-check later.
   - name: Intel Newsroom
     url: https://newsroom.intel.com/feed/
-    status: candidate
+    status: verified
   - name: IBM Newsroom
-    url: https://newsroom.ibm.com/press-releases?pagetemplate=rss
-    status: candidate
+    # fixed 2026-07-13: old ?pagetemplate=rss path used "press-releases",
+    # the live site uses "announcements"
+    url: https://newsroom.ibm.com/announcements?pagetemplate=rss
+    status: verified   # checked 2026-07-13 (5 entries)
   - name: Hugging Face Blog
     url: https://huggingface.co/blog/feed.xml
-    status: candidate
+    status: verified
 
   # ---- Shopify ----
-  - name: Shopify Newsroom
-    url: https://www.shopify.com/news.rss
-    status: candidate
-  - name: Shopify Engineering Blog
-    url: https://shopify.engineering/blog.atom
-    status: candidate
+  # Shopify Newsroom (shopify.com/news.rss) and Shopify Engineering Blog
+  # (shopify.engineering/blog.atom) both removed: dead (404s), and no
+  # feed link discoverable on either site as of 2026-07-13.
   - name: Shopify Changelog   # product/API changes, incl. AI features
-    url: https://changelog.shopify.com/rss
-    status: candidate
+    # fixed 2026-07-13: real path is /feed, not /rss
+    url: https://changelog.shopify.com/feed
+    status: verified   # checked 2026-07-13 (1551 entries)
 
   # ---- Cloudflare ----
   - name: Cloudflare Blog
     url: https://blog.cloudflare.com/rss/
-    status: candidate  # feed URL has moved before — validate!
+    status: verified
   - name: Cloudflare Status (incidents)
-    # status page confirms Atom/RSS feeds exist; /history.rss is the
-    # standard Statuspage pattern
     url: https://www.cloudflarestatus.com/history.rss
-    status: candidate
+    status: verified
   # Cloudflare product changelog feeds (official, documented):
   # https://developers.cloudflare.com/fundamentals/new-features/available-rss-feeds/
   # — grab the "all products" feed URL from that page if you want it.
@@ -108,30 +107,30 @@ feeds:
   # ---- cybersecurity / ransomware (general-audience signal) ----
   - name: Krebs on Security
     url: https://krebsonsecurity.com/feed/
-    status: candidate
+    status: verified
   - name: The Record (Recorded Future News)
     url: https://therecord.media/feed
-    status: candidate
+    status: verified
   - name: BleepingComputer
     url: https://www.bleepingcomputer.com/feed/
-    status: candidate
+    status: verified
     # high volume — filtered to stories a general AI/tech audience cares about
     keywords: [ransomware, breach, breached, hacked, zero-day, extortion,
                leak, outage, Microsoft, Google, Apple, OpenAI, Anthropic,
                Cloudflare, NVIDIA, AI]
   - name: CISA Advisories
     url: https://www.cisa.gov/cybersecurity-advisories/all.xml
-    status: candidate
+    status: verified
 
   # ---- crypto / bitcoin ----
   - name: CoinDesk
     url: https://www.coindesk.com/arc/outboundfeeds/rss/
-    status: candidate
+    status: verified
     keywords: [Bitcoin, SEC, CFTC, ETF, Coinbase, hack, stolen, Polymarket,
                Kalshi, stablecoin, Treasury, regulation]
   - name: The Block
     url: https://www.theblock.co/rss.xml
-    status: candidate
+    status: verified
     keywords: [Bitcoin, SEC, CFTC, ETF, hack, Polymarket, Kalshi, regulation]
 
   # ---- X / Twitter accounts (unofficial RSS bridge — fragile) ----
@@ -210,7 +209,10 @@ pages:
   - name: AI at Meta blog listing
     url: https://ai.meta.com/blog/
     # fallback for the feed-less blog; diff fires on new post titles.
-    # If the candidate RSS feed above validates, remove this entry.
+  - name: Microsoft MSRC blog listing
+    url: https://www.microsoft.com/en-us/msrc/blog
+    # fallback added 2026-07-13 after the MSRC blog's RSS feed went dead
+    # (moved off msrc.microsoft.com with no feed re-advertised)
   - name: TrueUp layoffs tracker
     url: https://www.trueup.io/layoffs
     # drop live counters so diffs fire only when the layoffs list changes
@@ -275,12 +277,14 @@ edgar_tickers:
   - AVGO   # Broadcom
   - QCOM   # Qualcomm
   - MU     # Micron
-  - ARM    # Arm Holdings
+  - 1973239  # Arm Holdings plc — ticker "ARM" doesn't resolve via EDGAR's
+             # ticker lookup, numeric CIK required (files 6-K, see below)
   - ASML   # ASML (6-K)
   - ORCL   # Oracle
   - PLTR   # Palantir
   - SMCI   # Supermicro
-  - CRWV   # CoreWeave
+  - 1769628  # CoreWeave — ticker "CRWV" doesn't resolve via EDGAR's ticker
+             # lookup, numeric CIK required (files 8-K, domestic issuer)
   - NET    # Cloudflare
   - CRWD   # CrowdStrike (cybersecurity bellwether)
   - PANW   # Palo Alto Networks
@@ -297,6 +301,7 @@ edgar_tickers:
 edgar_6k_tickers:
   - TSM
   - ASML
+  - 1973239  # Arm Holdings plc (must match the numeric CIK used above)
 
 # Private / no-RSS companies -> Google News RSS query feeds.
 # Quoted phrases keep results tight; add "press release" or site: terms
@@ -321,9 +326,11 @@ gnews_queries:
                cuts, exits, appointed, named]
   - query: 'NVIDIA OR Microsoft OR AMD OR Intel OR TSMC layoffs'
     keywords: [layoffs, laid off, cuts, restructuring, WARN]
-  # --- executive tracking (uncomment to enable; news coverage of a CEO's
-  # X posts/statements acts as a significance filter — trivial posts don't
-  # get written up, consequential ones do within the hour) ---
+  # --- executive tracking (active — news coverage of a CEO's X posts/
+  # statements acts as a significance filter — trivial posts don't get
+  # written up, consequential ones do within the hour. Complements the
+  # direct X account feeds above: this catches when someone else's post
+  # about the exec blows up, not just their own posts) ---
   - '"Sam Altman"'
   - '"Dario Amodei"'
   - '"Jensen Huang"'
