@@ -37,9 +37,16 @@ All Collections
 Claude
 Release notes
 Release notes
-Updated this week
+Updated in the last 15 minutes
 Table of contents
 July 2026
+July 14, 2026
+HIPAA configuration for your Claude organizations is now self-serve
+You can now manage HIPAA readiness for your Claude organizations yourself. This applies to both Claude Enterprise and the Claude Platform (API). In each product, an eligible admin can review the Business Associate Agreement (BAA), download the implementation guide, and enable the HIPAA configuration in a single flow. For more information, refer to
+HIPAA-ready Enterprise plans
+and
+HIPAA readiness for Claude API
+.
 July 9, 2026
 A new way to reflect with Claude
 Your monthly recap is a new feature at
