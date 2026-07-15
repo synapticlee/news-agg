@@ -1,7 +1,7 @@
 name: PR watch
 on:
   schedule:
-    - cron: "*/5 * * * *"   # best-effort; expect 5-15 min jitter
+    # - cron: "*/5 * * * *"   # best-effort; expect 5-15 min jitter
   workflow_dispatch: {}       # manual trigger for testing
 permissions:
   contents: write             # commit seen.json / pages/
