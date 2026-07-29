@@ -3,6 +3,7 @@ Products
 AI Research
 Resources
 About
+AI Developers
 Try Meta AI
 The latest AI news from Meta
 FEATURED
@@ -10,6 +11,12 @@ Research
 Introducing Muse Spark 1.1
 July 9, 2026
 Latest News
+Open Source
+Reimagining Independence: How Meta’s AI Models Are Helping the University of Pittsburgh Transform Assistive Robotics
+Jul 27, 2026
+Open Source
+How Meta’s AI Models Are Powering the First Wave of Genesis Mission Projects
+Jul 21, 2026
 FEATURED
 Research
 Introducing Muse Image and Muse Video
@@ -17,13 +24,6 @@ Jul 7, 2026
 Research
 From Brain Waves to Words: Brain2Qwerty Offers a New Path to Communication Without Surgery
 Jun 29, 2026
-FEATURED
-Research
-Scaling How We Build and Test Our Most Advanced AI
-Apr 8, 2026
-FEATURED
-Introducing Muse Spark: Scaling Towards Personal Superintelligence
-Apr 8, 2026
 Get the latest from AI at Meta in your inbox
 Sign up
 Our approach
