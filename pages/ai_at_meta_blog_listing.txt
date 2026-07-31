@@ -26,46 +26,47 @@ From Brain Waves to Words: Brain2Qwerty Offers a New Path to Communication Witho
 Jun 29, 2026
 Get the latest from AI at Meta in your inbox
 Sign up
-Our approach
-About AI at Meta
-People
-Careers
-Research
-Infrastructure
-Resources
-Demos
 Meta AI
 Assistant
 Media Generation
 Vibes
 AI Studio
-Latest news
-Blog
-Newsletter
-Foundational models
-Llama
-Our approach
-Our approach
-About AI at Meta
-People
-Careers
-Research
-Research
-Infrastructure
+AI Research
+Overview
+Projects
+Resources & tools
+Publications
+GitHub
 Resources
+Blog
+Learning Hub
 Demos
+About
+Overview
+Open Source
+Careers
 Meta AI
 Meta AI
 Assistant
 Media Generation
 Vibes
 AI Studio
-Latest news
-Latest news
+AI Research
+AI Research
+Overview
+Projects
+Resources & tools
+Publications
+GitHub
+Resources
 Blog
-Newsletter
-Foundational models
-Llama
+Learning Hub
+Demos
+About
+About
+Overview
+Open Source
+Careers
 Privacy Policy
 Terms
 Cookies
