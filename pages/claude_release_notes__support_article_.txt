@@ -48,7 +48,7 @@ How to get support for Claude for Government
 Public Sector FAQs
 Claude 4 Invite Contest
 Conversation management
-How can I delete or rename a conversation?
+Delete or rename a conversation
 Share and unshare chats
 Use incognito chats
 Use Claude’s chat search and memory to build on previous context
@@ -384,6 +384,7 @@ Covered Models
 Covered Models under a Business Associate Agreement (BAA)
 Using Claude for Legal Work: Privilege, Confidentiality, and How to Think About Configuration
 Claude for Teachers: your data and our terms
+How Claude marks AI-generated content
 Safeguards
 Our Approach to User Safety
 Exceptions to our Usage Policy
