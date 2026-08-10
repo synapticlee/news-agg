@@ -28,7 +28,6 @@ Meta AI
 Assistant
 Media Generation
 Vibes
-AI Studio
 AI Research
 Overview
 Projects
@@ -48,7 +47,6 @@ Meta AI
 Assistant
 Media Generation
 Vibes
-AI Studio
 AI Research
 AI Research
 Overview
