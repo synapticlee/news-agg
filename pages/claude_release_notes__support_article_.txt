@@ -325,10 +325,6 @@ Introduction to prompt design
 Claude’s response to my prompt is too brief.
 My prompt isn’t giving me a helpful answer.
 Connectors
-Build custom connectors via remote MCP servers
-Remote MCP server submission guide
-Local MCP Server Submission Guide
-Building Desktop Extensions with MCPB
 General
 Use connectors to extend Claude's capabilities
 When to use desktop and web connectors
