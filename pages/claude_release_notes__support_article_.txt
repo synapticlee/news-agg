@@ -290,7 +290,6 @@ Creating and managing Workspaces in the Claude Console
 I have a paid Claude subscription (Pro, Max, Team, or Enterprise plans). Why do I have to pay separately to use the Claude API and Console?
 Claude Console roles and permissions
 Manage user feedback settings on Claude Console
-Sharing Prompts in the Claude Console
 About the Development Partner Program
 Anthropic's AI for Science Program
 Customizing your Console appearance settings
