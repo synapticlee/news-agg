@@ -284,7 +284,7 @@ How can I access the Claude API?
 Where is the Claude API supported?
 Log in to your Console account
 I created a Claude Console organization - how do I start using the Claude API?
-How do I use the Workbench?
+How do I use the playground?
 Cost and Usage Reporting in the Claude Console
 Creating and managing Workspaces in the Claude Console
 I have a paid Claude subscription (Pro, Max, Team, or Enterprise plans). Why do I have to pay separately to use the Claude API and Console?
