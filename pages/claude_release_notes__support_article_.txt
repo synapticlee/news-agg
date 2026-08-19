@@ -38,7 +38,7 @@ How do I change the email address associated with my account?
 I would like to input sensitive data into my chats with Claude. Who can view my conversations?
 How do I log out of all active sessions?
 Export your Claude data
-How can I delete my Claude account?
+Delete your Claude account
 Why is a coupon or promotion not available for my account?
 Managing your active sessions
 Understanding your billing address and tax calculation
