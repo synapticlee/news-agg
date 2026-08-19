@@ -304,7 +304,6 @@ API Key Best Practices: Keeping Your Keys Safe and Secure
 How can I get higher rate limits on the Claude API?
 Pricing and Billing
 How do I pay for my Claude API usage?
-How will I be billed for Claude API use?
 How can I learn more about Claude API pricing?
 Add or update your Claude Console organization's tax or VAT ID
 Where can I find full receipts and invoices for my Claude API and Console payments?
