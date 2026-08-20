@@ -418,7 +418,7 @@ All Collections
 Claude
 Release notes
 Release notes
-Updated over a week ago
+Updated over 2 weeks ago
 Copy for LLM
 August 2026
 August 6, 2026
